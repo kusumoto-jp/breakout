@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <title>Breakout</title>
+    <style type="text/css">
+      canvas {
+        display: block;
+        margin: auto;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id='canvas' width='300' height='300'></canvas>
+  </body>
+  <script>
+      var distanceX = 3.0;
+      var distanceY = 5.0;
+      var currentX = 200;
+      var currentY = 150;
+      var cs  = document.getElementById('canvas');
+      var ctx = cs.getContext('2d');
+
+      setInterval(draw, 30);
+
+      function draw(){
+          ctx.fillStyle = "white";
+          ctx.fillRect(0, 0, cs.width, cs.height);
+
+          //位置を更新
+          currentX += distanceX;
+          currentY += distanceY;
+
+          if(currentX < 0 || currentX > cs.width){
+              distanceX *= -1;
+          }
+
+          if(currentY < 0 || currentY > cs.height){
+              distanceY *= -1;
+          }
+
+          //更新した座標で円を描く
+          ctx.beginPath();
+          ctx.fillStyle = 'blue';
+          ctx.arc(currentX, currentY, 4, 0, Math.PI*2.0, true);
+          ctx.fill();
+      }
+  </script>
+</html>
