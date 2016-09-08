@@ -13,35 +13,42 @@
     <canvas id='canvas' width='300' height='300'></canvas>
   </body>
   <script>
-      var distanceX = 3.0;
-      var distanceY = 5.0;
-      var currentX = 200;
-      var currentY = 150;
       var cs  = document.getElementById('canvas');
       var ctx = cs.getContext('2d');
+      var currentBall;
 
-      setInterval(draw, 30);
+      function Ball() {
+          this.speedX = 3.0;
+          this.speedY = 5.0;
+          this.currentX = 200;
+          this.currentY = 150;
+      }
 
-      function draw(){
+      function init() {
+          var currentBall = new Ball();
+          setInterval("draw(currentBall)", 30);
+      }
+
+      function draw(ball){
           ctx.fillStyle = "white";
           ctx.fillRect(0, 0, cs.width, cs.height);
 
           //位置を更新
-          currentX += distanceX;
-          currentY += distanceY;
+          ball.currentX += ball.speedX;
+          ball.currentY += ball.speedY;
 
-          if(currentX < 0 || currentX > cs.width){
-              distanceX *= -1;
+          if(ball.currentX < 0 || ball.currentX > cs.width){
+              ball.speedX *= -1;
           }
 
-          if(currentY < 0 || currentY > cs.height){
-              distanceY *= -1;
+          if(ball.currentY < 0 || ball.currentY > cs.height){
+              ball.speedY *= -1;
           }
 
           //更新した座標で円を描く
           ctx.beginPath();
           ctx.fillStyle = 'blue';
-          ctx.arc(currentX, currentY, 4, 0, Math.PI*2.0, true);
+          ctx.arc(ball.currentX, ball.currentY, 4, 0, Math.PI*2.0, true);
           ctx.fill();
       }
   </script>
