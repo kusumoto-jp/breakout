@@ -20,8 +20,29 @@
       function Ball() {
           this.speedX = 3.0;
           this.speedY = 5.0;
-          this.currentX = 200;
-          this.currentY = 150;
+          this.currentX = 0;
+          this.currentY = 100;
+          this.isMovable = function () {
+              this.isMovableX();
+              this.isMovableY();
+          }
+          this.isMovableX = function() {
+              if(this.currentX < 0 || this.currentX > cs.width) this.speedX *= -1;
+          }
+          this.isMovableY = function() {
+              if(this.currentY < 0) this.speedY *= -1;
+              if(bar.display < this.currentY){
+                  if(bar.x < this.currentX && this.currentX < bar.x+bar.width) {
+                      this.speedY *= -1;
+                  }
+              }
+          }
+          this.draw = function() {
+              ctx.beginPath();
+              ctx.fillStyle = 'blue';
+              ctx.arc(this.currentX, this.currentY, 4, 0, Math.PI*2.0, true);
+              ctx.fill();
+          }
       }
 
       function Bar() {
@@ -30,7 +51,6 @@
           this.display = cs.height-20;
           this.width = 100;
           this.height = 8;
-          ctx.fillRect(this.x, this.display, this.width, this.height);
 
           this.moveLeft = function() {
               if (this.isMovable(-10)) draw();
@@ -46,6 +66,9 @@
               }
               return false;
           }
+          this.draw = function() {
+              ctx.fillRect(bar.x, bar.display, bar.width, bar.height);
+          }
       }
 
       function init() {
@@ -56,25 +79,14 @@
 
       function draw(){
           ctx.clearRect(0, 0, cs.width, cs.height);
-          ctx.fillRect(bar.x, bar.display, bar.width, bar.height);
+          bar.draw();
 
           //位置を更新
           ball.currentX += ball.speedX;
           ball.currentY += ball.speedY;
 
-          if(ball.currentX < 0 || ball.currentX > cs.width){
-              ball.speedX *= -1;
-          }
-
-          if(ball.currentY < 0 || ball.currentY > cs.height){
-              ball.speedY *= -1;
-          }
-
-          //更新した座標で円を描く
-          ctx.beginPath();
-          ctx.fillStyle = 'blue';
-          ctx.arc(ball.currentX, ball.currentY, 4, 0, Math.PI*2.0, true);
-          ctx.fill();
+          ball.isMovable();
+          ball.draw();
       }
 
       document.onkeydown = function (e) {
