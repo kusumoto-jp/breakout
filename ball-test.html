@@ -15,7 +15,7 @@
   <script>
       var cs  = document.getElementById('canvas');
       var ctx = cs.getContext('2d');
-      var currentBall, bar;
+      var ball, bar;
 
       function Ball() {
           this.speedX = 3.0;
@@ -24,15 +24,39 @@
           this.currentY = 150;
       }
 
-      function init() {
-          // currentBall = new Ball();
-          bar = new Bar();
-          // setInterval("draw(currentBall)", 30);
+      function Bar() {
+          this.x = 100;
+          this.y = 100;
+          this.display = cs.height-20;
+          this.width = 100;
+          this.height = 8;
+          ctx.fillRect(this.x, this.display, this.width, this.height);
+
+          this.moveLeft = function() {
+              if (this.isMovable(-10)) draw();
+          }
+          this.moveRight = function() {
+              if (this.isMovable(+10)) draw();
+          }
+          this.isMovable = function(direction) {
+              var moveX = this.x + direction;
+              if (moveX <= cs.width - this.width && moveX >= 0) {
+                  this.x += direction;
+                  return true;
+              }
+              return false;
+          }
       }
 
-      function draw(ball){
-          ctx.fillStyle = "white";
-          ctx.fillRect(0, 0, cs.width, cs.height);
+      function init() {
+          ball = new Ball();
+          bar = new Bar();
+          setInterval(draw, 30);
+      }
+
+      function draw(){
+          ctx.clearRect(0, 0, cs.width, cs.height);
+          ctx.fillRect(bar.x, bar.display, bar.width, bar.height);
 
           //位置を更新
           ball.currentX += ball.speedX;
@@ -51,34 +75,6 @@
           ctx.fillStyle = 'blue';
           ctx.arc(ball.currentX, ball.currentY, 4, 0, Math.PI*2.0, true);
           ctx.fill();
-      }
-
-      function Bar() {
-          this.x = 100;
-          this.y = 100;
-          this.display = cs.height-20;
-          this.width = 100;
-          this.height = 8;
-          ctx.fillRect(this.x, this.display, this.width, this.height);
-
-          this.moveLeft = function() {
-              if (this.isMovable(-10)) this.draw();
-          }
-          this.moveRight = function() {
-              if (this.isMovable(+10)) this.draw();
-          }
-          this.draw = function() {
-              ctx.clearRect(0, 0, cs.width, cs.height);
-              ctx.fillRect(this.x, this.display, this.width, this.height);
-          }
-          this.isMovable = function(direction) {
-              var moveX = this.x + direction;
-              if (moveX <= cs.width - this.width && moveX >= 0) {
-                  this.x += direction;
-                  return true;
-              }
-              return false;
-          }
       }
 
       document.onkeydown = function (e) {
